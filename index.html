@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LA Deeptech — Visit Map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+  #app { display: flex; height: 100vh; }
+  #sidebar { width: 380px; flex-shrink: 0; overflow-y: auto; border-right: 1px solid #e5e7eb; background: #fafafa; }
+  #map { flex: 1; }
+  header { padding: 16px; border-bottom: 1px solid #e5e7eb; background: #fff; position: sticky; top: 0; z-index: 10; }
+  header h1 { margin: 0 0 4px 0; font-size: 16px; }
+  header p { margin: 0; font-size: 12px; color: #6b7280; }
+  .actions { padding: 12px 16px; display: flex; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid #e5e7eb; background: #fff; position: sticky; top: 60px; z-index: 9; }
+  .actions button { font-size: 12px; padding: 6px 10px; border: 1px solid #d1d5db; background: #fff; border-radius: 6px; cursor: pointer; }
+  .actions button:hover { background: #f3f4f6; }
+  .actions button.primary { background: #2563eb; color: #fff; border-color: #2563eb; }
+  .actions button.primary:hover { background: #1d4ed8; }
+  .count { font-size: 12px; color: #6b7280; margin-left: auto; align-self: center; }
+  ul.companies { list-style: none; padding: 0; margin: 0; }
+  ul.companies li { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; cursor: pointer; display: flex; gap: 10px; align-items: flex-start; }
+  ul.companies li:hover { background: #f3f4f6; }
+  ul.companies li.selected { background: #eff6ff; }
+  ul.companies input[type="checkbox"] { margin-top: 3px; }
+  .company-info { flex: 1; min-width: 0; }
+  .company-name { font-weight: 600; font-size: 13px; }
+  .company-addr { font-size: 11px; color: #6b7280; margin-top: 2px; word-wrap: break-word; }
+  .badge { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 8px; margin-left: 4px; vertical-align: middle; }
+  .badge-verified { background: #dcfce7; color: #166534; }
+  .badge-approx { background: #fef3c7; color: #92400e; }
+  .badge-unverified { background: #fee2e2; color: #991b1b; }
+  .leaflet-popup-content { font-size: 12px; }
+  .leaflet-popup-content b { font-size: 13px; }
+  .legend { position: absolute; bottom: 16px; right: 16px; background: #fff; padding: 10px 12px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-size: 11px; z-index: 1000; }
+  .legend div { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .dot-verified { background: #16a34a; }
+  .dot-approx { background: #f59e0b; }
+  .dot-unverified { background: #dc2626; }
+  .meta-pill { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 8px; margin-right: 4px; background: #eef2ff; color: #3730a3; }
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar">
+    <header>
+      <h1 id="title">LA Deeptech</h1>
+      <p>Check companies you want to visit, then generate a route.</p>
+    </header>
+    <div class="actions">
+      <button id="select-all">Select all</button>
+      <button id="clear">Clear</button>
+      <button id="route" class="primary">Route in Google Maps</button>
+      <span class="count" id="count">0 selected</span>
+    </div>
+    <div style="padding:10px 16px; border-bottom:1px solid #e5e7eb; background:#fff; position:sticky; top:120px; z-index:8;">
+      <input id="search" type="search" placeholder="Search companies, addresses, or investors…"
+        style="width:100%; padding:8px 10px; font-size:13px; border:1px solid #d1d5db; border-radius:6px; outline:none;" />
+    </div>
+    <ul class="companies" id="list"></ul>
+  </aside>
+  <div id="map"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const COMPANIES = [
+  { id: 1,  name: "Vast",                 addr: "2851 Orange Ave, Long Beach, CA 90806",                       lat: 33.8167, lng: -118.1842, conf: "verified", careers: "https://job-boards.greenhouse.io/vast",
+    what: "Commercial space stations", founded: 2021, employees: 900, raised: "$1.5B+ (incl. founder)", latest: "$500M (Series A + debt) — Mar 2026", reqs: 36 },
+  { id: 2,  name: "Varda Space Industries", addr: "225 S Aviation Blvd, El Segundo, CA 90245",                  lat: 33.9182, lng: -118.3787, conf: "verified", careers: "https://job-boards.greenhouse.io/vardaspace",
+    what: "In-space pharma + reentry capsules", founded: 2021, employees: 180, raised: "$329M", latest: "$187M Series C — Jul 2025 ($500M val)", reqs: 22 },
+  { id: 3,  name: "Hadrian",              addr: "19501 S Western Ave, Torrance, CA 90501",                     lat: 33.8537, lng: -118.3093, conf: "verified", careers: "https://jobs.ashbyhq.com/hadrian-automation",
+    what: "Automated precision machining factories", founded: 2021, employees: 250, raised: "$730M", latest: "$131M Series C ext. — Dec 2025 ($1.6B val)", reqs: 55 },
+  { id: 4,  name: "Castelion",            addr: "19951 Mariner Ave, Torrance, CA 90503",                       lat: 33.8547, lng: -118.3617, conf: "verified", careers: "https://www.castelion.com/careers/",
+    what: "Hypersonic weapons", founded: 2022, employees: 160, raised: "$504M", latest: "$350M Series B — Dec 2025", reqs: 58 },
+  { id: 5,  name: "JetZero",              addr: "4150 E Donald Douglas Dr, Long Beach, CA 90808",              lat: 33.8181, lng: -118.1485, conf: "verified", careers: "https://job-boards.greenhouse.io/jetzero",
+    what: "Blended-wing-body aircraft", founded: 2020, employees: 230, raised: "~$1.0B (raised + committed)", latest: "$175M Series B — Jan 2026", reqs: 22 },
+  { id: 6,  name: "Skyryse",              addr: "2030 E Maple Ave, Suite 300, El Segundo, CA 90245",           lat: 33.9248, lng: -118.3859, conf: "verified", careers: "https://job-boards.greenhouse.io/skyryse",
+    what: "Fly-by-wire helicopter avionics", founded: 2016, employees: 200, raised: "$605M+", latest: "$300M+ Series C — Feb 2026 ($1.15B val)", reqs: 3 },
+  { id: 7,  name: "Radiant",              addr: "1921 E Maple Ave, El Segundo, CA 90245",                      lat: 33.9237, lng: -118.3870, conf: "verified", careers: "https://jobs.ashbyhq.com/radiant-industries",
+    what: "Portable microreactors", founded: 2020, employees: 150, raised: "$525M+", latest: "$300M+ Series D — Dec 2025 ($1.8B+ val)", reqs: 49 },
+  { id: 8,  name: "Valar Atomics",        addr: "4857 W 147th St, Hawthorne, CA 90250",                        lat: 33.8920, lng: -118.3575, conf: "verified", careers: "https://job-boards.greenhouse.io/valaratomics",
+    what: "Modular nuclear reactors", founded: 2023, employees: 80, raised: "$149M+", latest: "$130M Series A — Nov 2025", reqs: 21 },
+  { id: 9,  name: "Antares Industries",   addr: "19501 Prairie Ave, Torrance, CA 90503",                       lat: 33.8528, lng: -118.3402, conf: "verified", careers: "https://jobs.ashbyhq.com/Antares",
+    what: "Nuclear microreactors / space", founded: 2023, employees: 88, raised: "$130M+", latest: "$96M Series B (eq+debt) — Dec 2025", reqs: 16 },
+  { id: 10, name: "Northwood Space",      addr: "130 Arena St, El Segundo, CA 90245",                          lat: 33.9286, lng: -118.3801, conf: "verified", careers: "https://jobs.ashbyhq.com/NorthwoodSpace",
+    what: "Satellite ground-station hardware", founded: 2022, employees: 80, raised: "$136M", latest: "$100M Series B — Jan 2026", reqs: 25 },
+  { id: 11, name: "AnySignal",            addr: "111 Eucalyptus Dr, El Segundo, CA 90245",                     lat: 33.9210, lng: -118.4126, conf: "verified", careers: "https://jobs.ashbyhq.com/anysignal",
+    what: "RF / comms hardware", founded: 2022, employees: 39, raised: "$35.7M", latest: "$24M Series A — Dec 2025", reqs: 8 },
+  { id: 12, name: "Arc",                  addr: "2100 W 195th St, Torrance, CA 90504",                         lat: 33.8556, lng: -118.3287, conf: "verified", careers: "https://job-boards.greenhouse.io/arcboatcompany",
+    what: "Electric boats", founded: 2021, employees: 100, raised: "$137M", latest: "$70M Series B — Sep 2023", reqs: 8 },
+  { id: 13, name: "Freeform",             addr: "12824 Cerise Ave, Hawthorne, CA 90250",                       lat: 33.9037, lng: -118.3357, conf: "verified", careers: "https://job-boards.greenhouse.io/freeformfuturecorp",
+    what: "Metal additive manufacturing", founded: 2019, employees: 57, raised: "n/a disclosed", latest: "$67M Series B — Feb 2026", reqs: 25 },
+  { id: 14, name: "Critical Loop",        addr: "Long Beach, CA (street unconfirmed)",                         lat: 33.7701, lng: -118.1937, conf: "approx", careers: "https://jobs.ashbyhq.com/criticalloop",
+    what: "Grid / energy interconnection hardware", founded: 2023, employees: 28, raised: "$49M", latest: "$26M Series A — Apr 2026", reqs: 2 }
+];
+
+document.getElementById("title").textContent = `LA Deeptech — ${COMPANIES.length} companies`;
+
+// Center on El Segundo / South Bay where most companies cluster
+const map = L.map("map").setView([33.89, -118.32], 11);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+
+const legend = L.control({ position: "bottomright" });
+legend.onAdd = () => {
+  const div = L.DomUtil.create("div", "legend");
+  div.innerHTML = `
+    <div><span class="dot dot-verified"></span> Verified street address</div>
+    <div><span class="dot dot-approx"></span> Approximate (city center)</div>
+    <div><span class="dot dot-unverified"></span> Unverified company match</div>`;
+  return div;
+};
+legend.addTo(map);
+
+const colorFor = (conf) =>
+  conf === "verified" ? "#16a34a" : conf === "approx" ? "#f59e0b" : "#dc2626";
+
+const selected = new Set();
+const markers = {};
+
+function makeMarker(c) {
+  const m = L.circleMarker([c.lat, c.lng], {
+    radius: 8,
+    fillColor: colorFor(c.conf),
+    color: "#fff",
+    weight: 2,
+    fillOpacity: 0.9
+  }).addTo(map);
+  const careersHtml = c.careers ? `<br><a href="${c.careers}" target="_blank" rel="noopener" style="color:#2563eb;font-weight:600;">View careers (${c.reqs} hardtech reqs) →</a>` : '';
+  const meta = `
+    <div style="margin-top:6px;font-size:11px;color:#374151;line-height:1.45;">
+      <div><b>What:</b> ${c.what}</div>
+      <div><b>Founded:</b> ${c.founded} &nbsp;<b>Employees:</b> ~${c.employees}</div>
+      <div><b>Total raised:</b> ${c.raised}</div>
+      <div><b>Latest round:</b> ${c.latest}</div>
+    </div>`;
+  m.bindPopup(`<div style="min-width:260px;max-width:340px;"><b>${c.name}</b><br><span style="font-size:11px;color:#6b7280;">${c.addr}</span>${meta}${careersHtml}</div>`);
+  m.on("click", () => toggleSelect(c.id));
+  return m;
+}
+
+COMPANIES.forEach((c) => (markers[c.id] = makeMarker(c)));
+
+const list = document.getElementById("list");
+COMPANIES.forEach((c) => {
+  const li = document.createElement("li");
+  li.dataset.id = c.id;
+  const badgeClass =
+    c.conf === "verified" ? "badge-verified" :
+    c.conf === "approx" ? "badge-approx" : "badge-unverified";
+  const badgeText =
+    c.conf === "verified" ? "exact" :
+    c.conf === "approx" ? "approx" : "?";
+  li.innerHTML = `
+    <input type="checkbox" data-id="${c.id}" />
+    <div class="company-info">
+      <div class="company-name">${c.name} <span class="badge ${badgeClass}">${badgeText}</span></div>
+      <div class="company-addr">${c.addr}</div>
+      <div style="margin-top:4px;"><span class="meta-pill">${c.reqs} hardtech reqs</span><span class="meta-pill">${c.raised}</span></div>
+    </div>`;
+  li.addEventListener("click", (e) => {
+    if (e.target.tagName !== "INPUT") {
+      map.flyTo([c.lat, c.lng], 14, { duration: 0.6 });
+      markers[c.id].openPopup();
+    }
+  });
+  li.querySelector("input").addEventListener("change", (e) => {
+    e.stopPropagation();
+    toggleSelect(c.id, e.target.checked);
+  });
+  list.appendChild(li);
+});
+
+function toggleSelect(id, force) {
+  const isSel = force === undefined ? !selected.has(id) : force;
+  if (isSel) selected.add(id); else selected.delete(id);
+  const li = list.querySelector(`li[data-id="${id}"]`);
+  const cb = li.querySelector("input");
+  cb.checked = isSel;
+  li.classList.toggle("selected", isSel);
+  markers[id].setStyle({
+    radius: isSel ? 11 : 8,
+    weight: isSel ? 3 : 2,
+    color: isSel ? "#1d4ed8" : "#fff"
+  });
+  document.getElementById("count").textContent = `${selected.size} selected`;
+}
+
+document.getElementById("search").addEventListener("input", (e) => {
+  const q = e.target.value.trim().toLowerCase();
+  COMPANIES.forEach((c) => {
+    const li = list.querySelector(`li[data-id="${c.id}"]`);
+    if (!li) return;
+    if (!q) { li.style.display = ""; return; }
+    const haystack = [c.name, c.addr, c.what, c.raised, c.latest].join(" ").toLowerCase();
+    li.style.display = haystack.includes(q) ? "" : "none";
+  });
+});
+
+document.getElementById("select-all").addEventListener("click", () => {
+  COMPANIES.forEach((c) => toggleSelect(c.id, true));
+});
+document.getElementById("clear").addEventListener("click", () => {
+  [...selected].forEach((id) => toggleSelect(id, false));
+});
+
+document.getElementById("route").addEventListener("click", () => {
+  if (selected.size < 2) {
+    alert("Select at least 2 companies to build a route.");
+    return;
+  }
+  if (selected.size > 10) {
+    if (!confirm(`Google Maps supports up to 10 stops. You selected ${selected.size}. Continue with the first 10 in radar order?`)) return;
+  }
+  const stops = COMPANIES
+    .filter((c) => selected.has(c.id))
+    .slice(0, 10)
+    .map((c) => `${c.lat},${c.lng}`);
+  const url = `https://www.google.com/maps/dir/${stops.join("/")}`;
+  window.open(url, "_blank");
+});
+</script>
+</body>
+</html>
