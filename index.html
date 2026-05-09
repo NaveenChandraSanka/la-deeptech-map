@@ -69,51 +69,145 @@
 <script>
 const COMPANIES = [
   { id: 1,  name: "Vast",                 addr: "2851 Orange Ave, Long Beach, CA 90806",                       lat: 33.8167, lng: -118.1842, conf: "verified", careers: "https://job-boards.greenhouse.io/vast",
-    what: "Commercial space stations", founded: 2021, employees: 900, raised: "$1.5B+ (incl. founder)", latest: "$500M (Series A + debt) — Mar 2026", reqs: 36 },
+    what: "Commercial space stations", founded: 2021, employees: 900, raised: "$1.5B+ (incl. founder)", latest: "$500M (Series A + debt) — Mar 2026", reqs: 36,
+    team: [
+      { name: "Max Haot", title: "CEO (replaced founder Jed McCaleb Aug 2023)", linkedin: "https://www.linkedin.com/in/maxhaot" },
+      { name: "Alex Hudson", title: "CTO (ex-SpaceX Dragon Avionics)", linkedin: "https://www.linkedin.com/in/amjhudson" },
+      { name: "Karin Kuo", title: "★★ Chief People Officer (ex-Relativity VP People)", linkedin: "https://www.linkedin.com/in/karinkuo" }
+    ] },
   { id: 2,  name: "Varda Space Industries", addr: "225 S Aviation Blvd, El Segundo, CA 90245",                  lat: 33.9182, lng: -118.3787, conf: "verified", careers: "https://job-boards.greenhouse.io/vardaspace",
-    what: "In-space pharma + reentry capsules", founded: 2021, employees: 180, raised: "$329M", latest: "$187M Series C — Jul 2025 ($500M val)", reqs: 22 },
+    what: "In-space pharma + reentry capsules", founded: 2021, employees: 180, raised: "$329M", latest: "$187M Series C — Jul 2025 ($500M val)", reqs: 22,
+    team: [
+      { name: "Will Bruey", title: "CEO (co-founder w/ Delian Asparouhov)", linkedin: "https://www.linkedin.com/in/will-bruey-8a2b5040" },
+      { name: "Nicholas Cialdella", title: "CTO (ex-SpaceX 8 yrs avionics)", linkedin: "https://www.linkedin.com/in/njcialdella/" },
+      { name: "Karen Gifford", title: "★ Director of People Ops (ex-Virgin Galactic VP People)", linkedin: "https://www.linkedin.com/in/karengifford" }
+    ] },
   { id: 3,  name: "Hadrian",              addr: "19501 S Western Ave, Torrance, CA 90501",                     lat: 33.8537, lng: -118.3093, conf: "verified", careers: "https://jobs.ashbyhq.com/hadrian-automation",
-    what: "Automated precision machining factories", founded: 2021, employees: 250, raised: "$730M", latest: "$131M Series C ext. — Dec 2025 ($1.6B val)", reqs: 55 },
+    what: "Automated precision machining factories", founded: 2021, employees: 250, raised: "$730M", latest: "$131M Series C ext. — Dec 2025 ($1.6B val)", reqs: 55,
+    team: [
+      { name: "Chris Power", title: "CEO & CPO (Chief Product, founder 2020)", linkedin: "https://www.linkedin.com/in/powerc" },
+      { name: "Brian Schneider", title: "Strategic People & Talent Leader (manual LinkedIn outreach)", linkedin: "https://www.linkedin.com/in/bts415/" }
+    ] },
   { id: 4,  name: "Castelion",            addr: "19951 Mariner Ave, Torrance, CA 90503",                       lat: 33.8547, lng: -118.3617, conf: "verified", careers: "https://www.castelion.com/careers/",
-    what: "Hypersonic weapons", founded: 2022, employees: 160, raised: "$504M", latest: "$350M Series B — Dec 2025", reqs: 58 },
+    what: "Hypersonic weapons", founded: 2022, employees: 160, raised: "$504M", latest: "$350M Series B — Dec 2025", reqs: 58,
+    team: [
+      { name: "Satyam Satyarthi", title: "VP Engineering (ex-SpaceX Starshield Structures)", linkedin: "https://www.linkedin.com/in/satyam-satyarthi/" }
+    ] },
   { id: 5,  name: "JetZero",              addr: "4150 E Donald Douglas Dr, Long Beach, CA 90808",              lat: 33.8181, lng: -118.1485, conf: "verified", careers: "https://job-boards.greenhouse.io/jetzero",
-    what: "Blended-wing-body aircraft", founded: 2020, employees: 230, raised: "~$1.0B (raised + committed)", latest: "$175M Series B — Jan 2026", reqs: 22 },
+    what: "Blended-wing-body aircraft", founded: 2020, employees: 230, raised: "~$1.0B (raised + committed)", latest: "$175M Series B — Jan 2026", reqs: 22,
+    team: [
+      { name: "Tom O'Leary", title: "Co-Founder, CEO", linkedin: "https://www.linkedin.com/in/thomasjoleary" },
+      { name: "Florentina Viscotchi", title: "Chief Engineering (ex-Airbus A220 lead)", linkedin: "https://www.linkedin.com/in/florentina-viscotchi-64840620" },
+      { name: "Darla Horn", title: "★★ VP, Head of People & Talent (20+ yrs People/Talent)", linkedin: "https://www.linkedin.com/in/darlahorn" }
+    ] },
   { id: 6,  name: "Skyryse",              addr: "2030 E Maple Ave, Suite 300, El Segundo, CA 90245",           lat: 33.9248, lng: -118.3859, conf: "verified", careers: "https://job-boards.greenhouse.io/skyryse",
-    what: "Fly-by-wire helicopter avionics", founded: 2016, employees: 200, raised: "$605M+", latest: "$300M+ Series C — Feb 2026 ($1.15B val)", reqs: 3 },
+    what: "Fly-by-wire helicopter avionics", founded: 2016, employees: 200, raised: "$605M+", latest: "$300M+ Series C — Feb 2026 ($1.15B val)", reqs: 3,
+    team: [
+      { name: "Mark Groden, PhD", title: "CEO/Founder (60+ patents, sensor fusion)", linkedin: "https://www.linkedin.com/in/mark-groden-b8b97552" },
+      { name: "Steve O'Connor", title: "VP Engineering (~87-person eng dept)", linkedin: "https://www.linkedin.com/in/steve-o-connor-50110034" },
+      { name: "Debbie Morisie, SPHR", title: "★★ Head of People (30+ yrs HR)", linkedin: "https://www.linkedin.com/in/debbiemorisie" }
+    ] },
   { id: 7,  name: "Radiant",              addr: "1921 E Maple Ave, El Segundo, CA 90245",                      lat: 33.9237, lng: -118.3870, conf: "verified", careers: "https://jobs.ashbyhq.com/radiant-industries",
-    what: "Portable microreactors", founded: 2020, employees: 150, raised: "$525M+", latest: "$300M+ Series D — Dec 2025 ($1.8B+ val)", reqs: 49 },
+    what: "Portable microreactors", founded: 2020, employees: 150, raised: "$525M+", latest: "$300M+ Series D — Dec 2025 ($1.8B+ val)", reqs: 49,
+    team: [
+      { name: "Doug Bernauer", title: "CEO/Founder (ex-SpaceX)", linkedin: "https://www.linkedin.com/in/doug-bernauer" },
+      { name: "Rita Baranwal, PhD", title: "Chief Nuclear Officer (joined Dec 2025)", linkedin: "https://www.linkedin.com/in/dr-rita-baranwal-4454a78a/" },
+      { name: "Tatevik Garibyan", title: "★ Director of People Ops (VP People req open)", linkedin: "https://www.linkedin.com/in/tateg" }
+    ] },
   { id: 8,  name: "Valar Atomics",        addr: "4857 W 147th St, Hawthorne, CA 90250",                        lat: 33.8920, lng: -118.3575, conf: "verified", careers: "https://job-boards.greenhouse.io/valaratomics",
-    what: "Modular nuclear reactors", founded: 2023, employees: 80, raised: "$149M+", latest: "$130M Series A — Nov 2025", reqs: 21 },
+    what: "Modular nuclear reactors", founded: 2023, employees: 80, raised: "$149M+", latest: "$130M Series A — Nov 2025", reqs: 21,
+    team: [
+      { name: "Isaiah Taylor", title: "Founder & CEO", linkedin: "https://www.linkedin.com/in/isaiahptaylor" },
+      { name: "Willie van Rooyen", title: "Head of Mechanical Engineering (remote ZA)", linkedin: "https://www.linkedin.com/in/willie-van-rooyen-41a06a18" },
+      { name: "Kelly Vasquez", title: "★ Head of People & Talent (joined Mar 2026)", linkedin: "https://www.linkedin.com/in/kelly-vasquez-8009179" }
+    ] },
   { id: 9,  name: "Antares Industries",   addr: "19501 Prairie Ave, Torrance, CA 90503",                       lat: 33.8528, lng: -118.3402, conf: "verified", careers: "https://jobs.ashbyhq.com/Antares",
-    what: "Nuclear microreactors / space", founded: 2023, employees: 88, raised: "$130M+", latest: "$96M Series B (eq+debt) — Dec 2025", reqs: 16 },
+    what: "Nuclear microreactors / space", founded: 2023, employees: 88, raised: "$130M+", latest: "$96M Series B (eq+debt) — Dec 2025", reqs: 16,
+    team: [
+      { name: "Jordan Bramble", title: "CEO & Co-founder", linkedin: "https://www.linkedin.com/in/jordan-bramble-19147274" },
+      { name: "Reuven Fridmar", title: "★★ Head of Talent (ex-Relativity, ex-SpaceX recruiter)", linkedin: "https://www.linkedin.com/in/reuvenfridmar" }
+    ] },
   { id: 10, name: "Northwood Space",      addr: "130 Arena St, El Segundo, CA 90245",                          lat: 33.9286, lng: -118.3801, conf: "verified", careers: "https://jobs.ashbyhq.com/NorthwoodSpace",
-    what: "Satellite ground-station hardware", founded: 2022, employees: 80, raised: "$136M", latest: "$100M Series B — Jan 2026", reqs: 25 },
+    what: "Satellite ground-station hardware", founded: 2022, employees: 80, raised: "$136M", latest: "$100M Series B — Jan 2026", reqs: 25,
+    team: [
+      { name: "Bridgit Mendler", title: "CEO, Co-Founder", linkedin: "https://www.linkedin.com/in/bridgit-mendler" },
+      { name: "Griffin Cleverly", title: "Co-Founder, CTO (ex-MITRE/Lockheed)", linkedin: "https://www.linkedin.com/in/griffincleverly" }
+    ] },
   { id: 11, name: "AnySignal",            addr: "111 Eucalyptus Dr, El Segundo, CA 90245",                     lat: 33.9210, lng: -118.4126, conf: "verified", careers: "https://jobs.ashbyhq.com/anysignal",
-    what: "RF / comms hardware", founded: 2022, employees: 39, raised: "$35.7M", latest: "$24M Series A — Dec 2025", reqs: 8 },
+    what: "RF / comms hardware", founded: 2022, employees: 39, raised: "$35.7M", latest: "$24M Series A — Dec 2025", reqs: 8,
+    team: [
+      { name: "John Malsbury", title: "Co-Founder, CEO (ex-SpaceX signal proc.)", linkedin: "https://www.linkedin.com/in/jmalsbury" },
+      { name: "Ricardo (Ricky) Medina", title: "Co-Founder (de facto Head of Eng)", linkedin: "https://www.linkedin.com/in/ricardo-medina-9ab850234" }
+    ] },
   { id: 12, name: "Arc",                  addr: "2100 W 195th St, Torrance, CA 90504",                         lat: 33.8556, lng: -118.3287, conf: "verified", careers: "https://job-boards.greenhouse.io/arcboatcompany",
-    what: "Electric boats", founded: 2021, employees: 100, raised: "$137M", latest: "$70M Series B — Sep 2023", reqs: 8 },
+    what: "Electric boats", founded: 2021, employees: 100, raised: "$137M", latest: "$70M Series B — Sep 2023", reqs: 8,
+    team: [
+      { name: "Mitch Lee", title: "Co-founder, CEO", linkedin: "https://www.linkedin.com/in/mitchjlee" },
+      { name: "Ryan Cook", title: "Co-founder, CTO (status unclear — verify)", linkedin: "https://www.linkedin.com/in/ryan-cook-49732140" }
+    ] },
   { id: 13, name: "Freeform",             addr: "12824 Cerise Ave, Hawthorne, CA 90250",                       lat: 33.9037, lng: -118.3357, conf: "verified", careers: "https://job-boards.greenhouse.io/freeformfuturecorp",
-    what: "Metal additive manufacturing", founded: 2019, employees: 57, raised: "n/a disclosed", latest: "$67M Series B — Feb 2026", reqs: 25 },
+    what: "Metal additive manufacturing", founded: 2019, employees: 57, raised: "n/a disclosed", latest: "$67M Series B — Feb 2026", reqs: 25,
+    team: [
+      { name: "TJ Ronacher", title: "Co-Founder & President (ex-SpaceX Merlin lead)" },
+      { name: "Pauline Graf", title: "★ Senior Technical Recruiter (de-facto talent lead)", linkedin: "https://www.linkedin.com/in/pgraf/" }
+    ] },
   { id: 14, name: "Critical Loop",        addr: "Long Beach, CA (street unconfirmed)",                         lat: 33.7701, lng: -118.1937, conf: "approx", careers: "https://jobs.ashbyhq.com/criticalloop",
-    what: "Grid / energy interconnection hardware", founded: 2023, employees: 28, raised: "$49M", latest: "$26M Series A — Apr 2026", reqs: 2 },
+    what: "Grid / energy interconnection hardware", founded: 2023, employees: 28, raised: "$49M", latest: "$26M Series A — Apr 2026", reqs: 2,
+    team: [
+      { name: "Bala Ramamurthy", title: "CEO (ex-SpaceX chief flight-safety)", linkedin: "https://www.linkedin.com/in/balachandarramamurthy" },
+      { name: "Lydia Maher", title: "Co-Founder & CTO", linkedin: "https://www.linkedin.com/in/lydia-maher" },
+      { name: "Chip Leigh", title: "Head of Hardware", linkedin: "https://www.linkedin.com/in/chip-leigh" }
+    ] },
   { id: 15, name: "Anduril Industries",   addr: "1400 Anduril St, Costa Mesa, CA 92626",                        lat: 33.6837, lng: -117.9143, conf: "verified", careers: "https://job-boards.greenhouse.io/andurilindustries",
-    what: "Lattice autonomy OS, Fury CCA, Ghost, Anvil, Roadrunner defense systems", founded: 2017, employees: 6500, raised: "$6.7B", latest: "$2.5B Series G — Jun 2025 ($30.5B val)", reqs: 16 },
+    what: "Lattice autonomy OS, Fury CCA, Ghost, Anvil, Roadrunner defense systems", founded: 2017, employees: 6500, raised: "$6.7B", latest: "$2.5B Series G — Jun 2025 ($30.5B val)", reqs: 16,
+    team: [
+      { name: "Jason Levin", title: "Senior VP Engineering (Air Dominance & Strike)", linkedin: "https://www.linkedin.com/in/jason-levin-73469826/" }
+    ] },
   { id: 16, name: "Relativity Space",     addr: "3500 E Burnett St, Long Beach, CA 90815",                     lat: 33.8118, lng: -118.1389, conf: "verified", careers: "https://job-boards.greenhouse.io/relativityspace",
-    what: "Terran R reusable medium-lift rocket; 3D-printed primary structures", founded: 2015, employees: 1100, raised: "$2.45B", latest: "$400M Growth (Schmidt-led) — 2025", reqs: "active (n/a)" },
+    what: "Terran R reusable medium-lift rocket; 3D-printed primary structures", founded: 2015, employees: 1100, raised: "$2.45B", latest: "$400M Growth (Schmidt-led) — 2025", reqs: "active (n/a)",
+    team: [
+      { name: "Brian Sweeney", title: "★ Chief People Officer (per leadership page; manual LinkedIn)", linkedin: "https://www.linkedin.com/in/brian-sweeney-03522415b/" }
+    ] },
   { id: 17, name: "Impulse Space",        addr: "2651 Manhattan Beach Blvd, Redondo Beach, CA 90278",          lat: 33.8917, lng: -118.3850, conf: "verified", careers: "https://job-boards.greenhouse.io/impulsespace",
-    what: "Mira and Helios orbital transfer vehicles (LEO-to-GEO)", founded: 2021, employees: 300, raised: "$525M", latest: "$300M Series C — Jul 2025", reqs: "active (n/a)" },
+    what: "Mira and Helios orbital transfer vehicles (LEO-to-GEO)", founded: 2021, employees: 300, raised: "$525M", latest: "$300M Series C — Jul 2025", reqs: "active (n/a)",
+    team: [
+      { name: "Eric Romo", title: "President & COO (ex-SpaceX, ex-AltspaceVR founder)", linkedin: "https://www.linkedin.com/in/eric-romo-79ba641" }
+    ] },
   { id: 18, name: "CHAOS Industries",     addr: "3330 W El Segundo Blvd, Hawthorne, CA 90250",                 lat: 33.9165, lng: -118.3460, conf: "verified", careers: "https://www.chaosinc.com/careers",
-    what: "Vanquish coherent distributed networks radar for air/missile defense", founded: 2022, employees: 250, raised: "$785M", latest: "$510M (Valor-led) — 2026", reqs: 42 },
+    what: "Vanquish coherent distributed networks radar for air/missile defense", founded: 2022, employees: 250, raised: "$785M", latest: "$510M (Valor-led) — 2026", reqs: 42,
+    team: [
+      { name: "Bo Marr, PhD", title: "Co-founder, Co-CEO & CTO (Gavin Hood departed Jul 2025)", linkedin: "https://www.linkedin.com/in/bo-marr-phd-2822404" },
+      { name: "Ryan Retting", title: "VP Engineering (ex-Raytheon Sr Principal SWE)", linkedin: "https://www.linkedin.com/in/ryanretting" },
+      { name: "Allison Kerzner", title: "★★ Chief People Officer (ex-Anduril VP People)", linkedin: "https://www.linkedin.com/in/allison-kerzner-5308212a" }
+    ] },
   { id: 19, name: "Hermeus",              addr: "888 N Douglas St, El Segundo, CA 90245",                      lat: 33.9192, lng: -118.3895, conf: "verified", careers: "https://www.hermeus.com/careers",
-    what: "Mach 5 hypersonic aircraft (Quarterhorse, Darkhorse)", founded: 2018, employees: 275, raised: "$500M", latest: "$350M Series C — Apr 2026", reqs: 6 },
+    what: "Mach 5 hypersonic aircraft (Quarterhorse, Darkhorse)", founded: 2018, employees: 275, raised: "$500M", latest: "$350M Series C — Apr 2026", reqs: 6,
+    team: [
+      { name: "AJ Piplica", title: "Founder, CEO", linkedin: "https://www.linkedin.com/in/ajpiplica" },
+      { name: "Steve Furger", title: "CTO (per Jan 2026 PR — verify before outreach)" },
+      { name: "Chelsea Michael, PHR", title: "★ Sr Manager People Ops (VP People req open in LA)", linkedin: "https://www.linkedin.com/in/chelseabmichael" }
+    ] },
   { id: 20, name: "Machina Labs",         addr: "9410 Owensmouth Ave, Chatsworth, CA 91311",                   lat: 34.2336, lng: -118.6018, conf: "verified", careers: "https://machinalabs.ai/careers",
-    what: "Robotic dual-arm sheet metal forming", founded: 2019, employees: 120, raised: "$169M", latest: "$124M Series C — 2025", reqs: 9 },
+    what: "Robotic dual-arm sheet metal forming", founded: 2019, employees: 120, raised: "$169M", latest: "$124M Series C — 2025", reqs: 9,
+    team: [
+      { name: "Edward Mehr", title: "Co-Founder & CEO (PhD; ex-SpaceX, ex-Relativity 3D-printer lead)", linkedin: "https://www.linkedin.com/in/edward-mehr-bb0057b" }
+    ] },
   { id: 21, name: "Turion Space",         addr: "5 Technology Dr, Irvine, CA 92618",                           lat: 33.6469, lng: -117.7236, conf: "verified", careers: "https://turionspace.com/careers",
-    what: "Satellite fleet for space domain awareness + on-orbit servicing", founded: 2020, employees: 150, raised: "$95M", latest: "$75M Series B — 2025", reqs: "active (n/a)" },
+    what: "Satellite fleet for space domain awareness + on-orbit servicing", founded: 2020, employees: 150, raised: "$95M", latest: "$75M Series B — 2025", reqs: "active (n/a)",
+    team: [
+      { name: "Ryan Westerdahl", title: "CEO & Co-Founder (ex-SpaceX Merlin team)", linkedin: "https://www.linkedin.com/in/rwesterdahl" }
+    ] },
   { id: 22, name: "Swarm Aero",           addr: "2889 W 5th St Ste 111, Oxnard, CA 93030 (Ventura County)",    lat: 34.1975, lng: -119.1951, conf: "verified", careers: "https://www.swarm.aero/careers",
-    what: "Long-range multi-mission UAV swarms for ISR and strike", founded: 2023, employees: 45, raised: "$50M", latest: "$35M Series A — Mar 2026", reqs: "active (n/a)" },
+    what: "Long-range multi-mission UAV swarms for ISR and strike", founded: 2023, employees: 45, raised: "$50M", latest: "$35M Series A — Mar 2026", reqs: "active (n/a)",
+    team: [
+      { name: "Peter Kalogiannis", title: "CEO (per Apollo May 2026; was Co-Founder/Chief Engineer — verify)", linkedin: "https://www.linkedin.com/in/peter-kalogiannis-a5a2965" }
+    ] },
   { id: 23, name: "Hybron Technologies",  addr: "El Segundo, CA (street unconfirmed)",                         lat: 33.9192, lng: -118.4165, conf: "approx", careers: "https://hybron.com/careers",
-    what: "Hybrid chopped-fiber composite manufacturing for aero/defense", founded: 2022, employees: 35, raised: "$25M", latest: "$25M Seed — Apr 2026", reqs: "active (n/a)" },
+    what: "Hybrid chopped-fiber composite manufacturing for aero/defense", founded: 2022, employees: 35, raised: "$25M", latest: "$25M Seed — Apr 2026", reqs: "active (n/a)",
+    team: [
+      { name: "Aaron Guo", title: "Co-Founder & CTO (Forbes 30u30, ex-Boeing)", linkedin: "https://www.linkedin.com/in/aaron-guo-0229671b0" },
+      { name: "Zac Blasdel", title: "VP Operations (ex-Joby, ex-SpaceX Starlink, ex-USAF SW)", linkedin: "https://www.linkedin.com/in/zac-blasdel" }
+    ] },
   { id: 24, name: "Divergent Technologies", addr: "19601 Hamilton Ave, Torrance, CA 90502",                    lat: 33.8617, lng: -118.3120, conf: "verified", careers: "https://job-boards.greenhouse.io/divergent",
     what: "Software-defined additive manufacturing for auto/aero/defense structural parts (parent of Czinger)", founded: 2014, employees: 350, raised: "$870M+", latest: "$290M Series E — Sep 2025 ($2.3B val)", reqs: 16 },
   { id: 25, name: "Field AI",             addr: "Irvine, CA (street unconfirmed)",                             lat: 33.6846, lng: -117.8265, conf: "approx", careers: "https://www.fieldai.com/careers",
@@ -166,7 +260,14 @@ function makeMarker(c) {
       <div><b>Total raised:</b> ${c.raised}</div>
       <div><b>Latest round:</b> ${c.latest}</div>
     </div>`;
-  m.bindPopup(`<div style="min-width:260px;max-width:340px;"><b>${c.name}</b><br><span style="font-size:11px;color:#6b7280;">${c.addr}</span>${meta}${careersHtml}</div>`);
+  const teamHtml = (c.team && c.team.length) ? `
+    <div style="margin-top:8px;border-top:1px solid #e5e7eb;padding-top:6px;">
+      <div style="font-weight:600;font-size:11px;color:#374151;margin-bottom:4px;">Ask for:</div>
+      <ul style="margin:0;padding-left:14px;font-size:11px;line-height:1.45;">
+        ${c.team.map(t => `<li>${t.linkedin ? `<a href="${t.linkedin}" target="_blank" rel="noopener" style="color:#1f2937;text-decoration:underline;">${t.name}</a>` : `<span>${t.name}</span>`} — ${t.title}</li>`).join('')}
+      </ul>
+    </div>` : '';
+  m.bindPopup(`<div style="min-width:260px;max-width:340px;"><b>${c.name}</b><br><span style="font-size:11px;color:#6b7280;">${c.addr}</span>${meta}${careersHtml}${teamHtml}</div>`);
   m.on("click", () => toggleSelect(c.id));
   return m;
 }
@@ -224,7 +325,7 @@ document.getElementById("search").addEventListener("input", (e) => {
     const li = list.querySelector(`li[data-id="${c.id}"]`);
     if (!li) return;
     if (!q) { li.style.display = ""; return; }
-    const haystack = [c.name, c.addr, c.what, c.raised, c.latest].join(" ").toLowerCase();
+    const haystack = [c.name, c.addr, c.what, c.raised, c.latest, ...(c.team || []).flatMap(t => [t.name, t.title])].join(" ").toLowerCase();
     li.style.display = haystack.includes(q) ? "" : "none";
   });
 });
